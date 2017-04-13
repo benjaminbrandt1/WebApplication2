@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 13, 2017 2:29:02 PM by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="dao.HibernateDemo" table="hibernate_demo" catalog="sp17_3308_tue94788">
+        <id name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+            <generator class="identity" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="first_name" length="45" not-null="true" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="last_name" length="45" not-null="true" />
+        </property>
+        <property name="pswd" type="string">
+            <column name="pswd" length="45" not-null="true" />
+        </property>
+        <property name="country" type="string">
+            <column name="country" length="45" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>
