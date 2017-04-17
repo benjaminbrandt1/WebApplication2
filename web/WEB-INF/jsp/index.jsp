@@ -71,6 +71,11 @@
                     </td> 
                 </tr>
                 <tr>
+                    <td>
+                        <form:hidden path="userId" value="${user.userId}" />
+                    </td> 
+                </tr>
+                <tr>
                     <td colspan="2">
                         <c:if test="${!empty user.firstName}">
                             <input type="submit"
