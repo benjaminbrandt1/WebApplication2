@@ -7,6 +7,7 @@ package services;
 
 import dao.HibernateDemo;
 import dao.HibernateUtil;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,22 +24,26 @@ public class Helper {
         this.session = HibernateUtil.getSessionFactory().getCurrentSession();
     }
 
-    public List<HibernateDemo> getAllUsers() {
+     public List<HibernateDemo> getAllUsers() {
         List<HibernateDemo> userList = null;
         org.hibernate.Transaction tx = null;
-        this.session = HibernateUtil.getSessionFactory().getCurrentSession();
+        
         try {
+            this.session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
             Query q = session.createQuery("FROM HibernateDemo");
             userList = (List<HibernateDemo>) q.list();
+            tx.commit();
         } catch (Exception e) {
             if (tx != null) {
-                tx.rollback();
-                throw e;
-            }
-        } finally {
-            tx.commit();
-        }
+             tx.rollback();
+             tx.commit();
+             throw e;
+           }
+            userList = new ArrayList();
+            userList.add(new HibernateDemo("Cannot get connection to database."));
+            
+        } 
         return userList;
     }
 

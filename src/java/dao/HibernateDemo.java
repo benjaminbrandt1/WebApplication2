@@ -15,11 +15,15 @@ public class HibernateDemo  implements java.io.Serializable {
      private String pswd;
      private String country;
      private String email;
+     private String error;
 
     public HibernateDemo() {
     }
 
 	
+    public HibernateDemo(String error){
+        this.error = error;
+    }
     public HibernateDemo(String firstName, String lastName, String pswd, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,6 +36,14 @@ public class HibernateDemo  implements java.io.Serializable {
        this.pswd = pswd;
        this.country = country;
        this.email = email;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
    
     public Integer getUserId() {

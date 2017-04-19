@@ -6,6 +6,7 @@
 package controllers;
 
 import dao.HibernateDemo;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import services.Helper;
 public class UserListController {
 
     private Helper helper;
+    private boolean connectedToDB = true;
 
     public void setHelper(Helper helper) {
         this.helper = helper;
@@ -34,6 +36,7 @@ public class UserListController {
 
         if (helper == null) {
             helper = new Helper();
+
         }
 
         if (editUser != null) {
@@ -42,40 +45,62 @@ public class UserListController {
             model.addAttribute("user", new HibernateDemo());
         }
 
-        model.addAttribute("listUsers", this.helper.getAllUsers());
+        //model.addAttribute("hibernatedemo", this.userHelper.getUserByEmail("benbrandt"));
+        List userList = this.helper.getAllUsers();
+        if (((HibernateDemo) userList.get(0)).getError() != null) {
+            connectedToDB = false;
+            return "connection_error";
+        }
+        connectedToDB = true;
+        model.addAttribute("listUsers", userList);
         return "index";
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public String insertUser(@ModelAttribute("hibernatedemo") HibernateDemo user) {
 
-        this.helper.insert(user);
+        if (connectedToDB) {
+            this.helper.insert(user);
 
-        return "redirect:/user_list.htm";
+            return "redirect:/user_list.htm";
+        } else {
+            return "connection_error";
+        }
 
     }
 
     @RequestMapping("/remove/{userId}")
     public String removeUser(@PathVariable("userId") int userId) {
+        if (connectedToDB) {
 
-        this.helper.delete(userId);
-        return "redirect:/user_list.htm";
+            this.helper.delete(userId);
+            return "redirect:/user_list.htm";
+        } else {
+            return "connection_error";
+        }
     }
 
     @RequestMapping("/edit/{userId}")
     public String editUser(@PathVariable("userId") int userId, RedirectAttributes redirectAttributes) {
 
-        HibernateDemo user = this.helper.getUserById(userId);
-        redirectAttributes.addFlashAttribute("editUser", user);
-        return "redirect:/user_list.htm";
+        if (connectedToDB) {
+            HibernateDemo user = this.helper.getUserById(userId);
+            redirectAttributes.addFlashAttribute("editUser", user);
+            return "redirect:/user_list.htm";
+        } else {
+            return "connection_error";
+        }
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute("hibernatedemo") HibernateDemo user) {
 
-        this.helper.update(user);
+        if (connectedToDB) {
+            this.helper.update(user);
 
-        return "redirect:/user_list.htm";
-
+            return "redirect:/user_list.htm";
+        } else {
+            return "connection_error";
+        }
     }
 }
